@@ -1,84 +1,60 @@
-# EXP 5 : SPEECH RECOGNITION USING SCILAB
+## EXP 5  SPEECH RECOGNITION USING SCILAB
 
-## AIM: 
+### AIM: 
 
 To perform and verify speech recognition using SCILAB. 
 
-## APPARATUS REQUIRED: 
-PC installed with SCILAB. 
+### APPARATUS REQUIRED: 
+PC installed with SCILAB and Python IDE. 
 
 ## PROGRAM : 
+PYTHON CODE
+```Python
+import speech_recognition as sr
+r = sr.Recognizer()
+
+try:
+    with sr.AudioFile("harvard.wav") as source:
+        audio = r.record(source)
+
+    text = r.recognize_google(audio)
+    print("Recognized:", text)
+
+except Exception as e:
+    print("Error:", e)
+    text = "ERROR"
+
+# Always create output file
+with open("output.txt", "w") as f:
+    f.write(text)
 ```
+SCILAB CODE
+```python
 clc;
 clear;
 close;
 
-disp("🎤 Loading audio files...");
+cd("D:\SEMESTER 4\TERM 1\DTSP\SPEECH RECOGNITION\");
 
-// Read reference and test voice files
-[y1, fs1] = wavread("C:\Users\acer\Downloads\referance.wav");
-[y2, fs2] = wavread("C:\Users\acer\Downloads\test.wav");
+disp("Calling Python Speech Recognition...");
 
-// Check sampling rates
-if fs1 <> fs2 then
-    error("❌ Sampling rates must match!");
-end
+host("python speech_to_text.py");
 
-// Convert stereo to mono (if needed)
-if size(y1,2) == 2 then
-    y1 = mean(y1, 2);
-end
-if size(y2,2) == 2 then
-    y2 = mean(y2, 2);
-end
+// wait for python to finish
+sleep(5000);
 
-// Make both signals same length
-n = min(length(y1), length(y2));
-y1 = y1(1:n);
-y2 = y2(1:n);
+text = mgetl("output.txt");
 
-// Compute Euclidean distance
-dist = sqrt(sum((y1 - y2).^2));
+disp("Recognized Speech:");
+disp(text);
 
-disp("Euclidean distance (reference vs test): " + string(dist));
-
-// Decision based on threshold
-if dist < 0.5 then
-    disp("✅ Matching with reference (same word)");
-else
-    disp("❌ Not matching with reference (different word)");
-end
-
-// Plot both signals
-figure(0);
-subplot(2,1,1);
-plot(y1);
-title("REFERENCE VOICE SIGNAL");
-xlabel("Samples");
-ylabel("Amplitude");
-
-subplot(2,1,2);
-plot(y2);
-title("TEST VOICE SIGNAL");
-xlabel("Samples");
-ylabel("Amplitude");
-
-// Comparison plot
-figure(1);
-plot(y1, 'b');
-plot(y2, 'r');
-title("Reference (Blue) vs Test (Red) Signal");
-xlabel("Samples");
-ylabel("Amplitude");
-legend(["Reference", "Test"]);
-
-disp("✅ Waveforms plotted successfully.");
 ```
+### AUDIO 
+[harvard.wav](https://github.com/user-attachments/files/26216204/harvard.wav)
 
 ## OUTPUT: 
-<img width="1917" height="1198" alt="image" src="https://github.com/user-attachments/assets/1f3e8829-5162-425a-bae6-dbfd8249edf5" />
-<img width="1918" height="1198" alt="image" src="https://github.com/user-attachments/assets/bf301392-6f8b-4af6-bfad-640d5a8f3a76" />
+<img width="734" height="172" alt="image" src="https://github.com/user-attachments/assets/fcac0d79-a48a-400e-9b7e-ddbff745e6b1" />
 
 
 ## RESULT: 
-Thus the speech recognition using SCILAB was performed and verified.
+Thus the speech recognition using SCILAB and Python IDE was performed and verified.
